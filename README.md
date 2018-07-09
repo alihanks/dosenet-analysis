@@ -11,7 +11,7 @@ from another source, you will have to change a lot of filenames in the Ipython
 Notebooks. We might come up with a cleaner solution later on. Once you have 
 downloaded the data, you can manually run the [time\_binning.py](time_binning.py) 
 script with the necessary parameters, as follows:
-```
+```bash
 python time_binning.py [optional arguments] <source>
 ```
 where `source` can be a URL or file on your computer that refers to a `.csv` file 
