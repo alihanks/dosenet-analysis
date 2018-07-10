@@ -19,36 +19,38 @@ def run_all_binnings(time_interval):
     # these commands will be run as if they are being run from terminal
     # these should also work on the Windows command prompt
     # os.system(
-    #     f'python time_binning.py ~/Downloads/etch_roof_weather.csv -c pressure {args}')
+    #     f'python time_binning.py ~/Downloads/miramonte_os_weather.csv -c pressure {args}')
     # os.system(
-    #     f'python time_binning.py ~/Downloads/etch_roof_weather.csv -c temperature {args}')
+    #     f'python time_binning.py ~/Downloads/miramonte_os_weather.csv -c temperature {args}')
     # os.system(
-    #     f'python time_binning.py ~/Downloads/etch_roof_weather.csv -c humidity {args}')
+    #     f'python time_binning.py ~/Downloads/miramonte_os_weather.csv -c humidity {args}')
     # os.system(
-    #     f'python time_binning.py ~/Downloads/etch_roof_d3s.csv -c cpm {args}')
+    #     f'python time_binning.py ~/Downloads/miramonte_os_d3s.csv -c cpm {args}')
     # os.system(
-    #     f'python time_binning.py ~/Downloads/etch_roof_adc.csv -c co2_ppm {args}')
+    #     f'python time_binning.py ~/Downloads/miramonte_os_adc.csv -c co2_ppm {args}')
     # os.system(
-    #     f'python time_binning.py ~/Downloads/etch_roof.csv -c cpmpg {args}')
+    #     f'python time_binning.py ~/Downloads/miramonte_os.csv -c cpmpg {args}')
     # os.system(
-    #     f'python time_binning.py ~/Downloads/etch_roof_aq.csv -c PM1 {args}')
+    #     f'python time_binning.py ~/Downloads/miramonte_os_aq.csv -c PM1 {args}')
     # os.system(
-    #     f'python time_binning.py ~/Downloads/etch_roof_aq.csv -c PM25 {args}')
+    #     f'python time_binning.py ~/Downloads/miramonte_os_aq.csv -c PM25 {args}')
+    # os.system(
+    #     f'python time_binning.py ~/Downloads/miramonte_os_aq.csv -c PM10 {args}')
 
     os.system(
-        f'python time_binning.py wunderground_data/data_fire_1.csv -c Temperature {ws_args}')
+        f'python time_binning.py wunderground_data/data_fire_mira.csv -c Temperature {ws_args}')
     os.system(
-        f'python time_binning.py wunderground_data/data_fire_1.csv -c Pressure {ws_args}')
+        f'python time_binning.py wunderground_data/data_fire_mira.csv -c Pressure {ws_args}')
     os.system(
-        f'python time_binning.py wunderground_data/data_fire_1.csv -c Humidity {ws_args}')
+        f'python time_binning.py wunderground_data/data_fire_mira.csv -c Humidity {ws_args}')
     os.system(
-        f'python time_binning.py wunderground_data/data_fire_1.csv -c WindDirectionDegrees {ws_args}')
+        f'python time_binning.py wunderground_data/data_fire_mira.csv -c WindDirectionDegrees {ws_args}')
     os.system(
-        f'python time_binning.py wunderground_data/data_fire_1.csv -c WindSpeedMPH {ws_args}')
+        f'python time_binning.py wunderground_data/data_fire_mira.csv -c WindSpeedMPH {ws_args}')
 
 
 def main():
-    for i in range(1, 5):
+    for i in range(1, 7):
         run_all_binnings(i * SECONDS_IN_ONE_HOUR)
 
 

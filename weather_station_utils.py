@@ -58,45 +58,52 @@ format=1'''
 def get_all_binned(interval, data_dir):
     """Make a single DataFrame containing all the data we have binned.
     All the data points are aligned, thanks to the binning process.
-    
+
     :param interval:  interval of binning
     :param data_dir:  directory where the binned data exist
     :return:          pandas.DataFrame with all the data
     """
-    co2_data = pd.read_csv(os.path.join(data_dir, f'data_co2_ppm_{interval}.csv'),
+    co2_data = pd.read_csv(os.path.join(data_dir, f'mira_data_co2_ppm_{interval}.csv'),
                            header=0, names=['unix_time', 'co2'], usecols=[1])
 
-    radiation_data = pd.read_csv(os.path.join(data_dir, f'data_cpm_{interval}.csv'),
-                                 header=0, names=['unix_time', 'radiation'], usecols=[1])
-    
-    pgradiation_data = pd.read_csv(os.path.join(data_dir, f'data_cpmpg_{interval}.csv'),
+    # radiation_data = pd.read_csv(os.path.join(data_dir, f'mira_data_cpm_{interval}.csv'),
+    #                              header=0, names=['unix_time', 'radiation'], usecols=[1])
+
+    pgradiation_data = pd.read_csv(os.path.join(data_dir, f'mira_data_cpmpg_{interval}.csv'),
                                    header=0, names=['unix_time', 'pgradiation'], usecols=[1])
 
-    humidity_data = pd.read_csv(os.path.join(data_dir, f'data_humidity_{interval}.csv'),
+    humidity_data = pd.read_csv(os.path.join(data_dir, f'mira_data_humidity_{interval}.csv'),
                                 header=0, names=['unix_time', 'humidity'], usecols=[1])
 
-    temperature_data = pd.read_csv(os.path.join(data_dir, f'data_temperature_{interval}.csv'),
+    temperature_data = pd.read_csv(os.path.join(data_dir, f'mira_data_temperature_{interval}.csv'),
                                    header=0, names=['unix_time', 'temperature'], usecols=[1])
 
-    pressure_data = pd.read_csv(os.path.join(data_dir, f'data_pressure_{interval}.csv'),
+    pressure_data = pd.read_csv(os.path.join(data_dir, f'mira_data_pressure_{interval}.csv'),
                                 header=0, names=['unix_time', 'pressure'], usecols=[1])
-    
-    pm1_data = pd.read_csv(os.path.join(data_dir, f'data_PM1_{interval}.csv'),
+
+    pm1_data = pd.read_csv(os.path.join(data_dir, f'mira_data_PM1_{interval}.csv'),
                            header=0, names=['unix_time', 'pm1'], usecols=[1])
 
-    pm25_data = pd.read_csv(os.path.join(data_dir, f'data_PM25_{interval}.csv'),
+    pm25_data = pd.read_csv(os.path.join(data_dir, f'mira_data_PM25_{interval}.csv'),
                             header=0, names=['unix_time', 'pm25'], usecols=[1])
-    
-    pm10_data = pd.read_csv(os.path.join(data_dir, f'data_PM10_{interval}.csv'),
+
+    pm10_data = pd.read_csv(os.path.join(data_dir, f'mira_data_PM10_{interval}.csv'),
                             header=0, names=['unix_time', 'pm10'])
 
     # make one awesome DataFrame object containing all the data
-    all_data = pd.concat([co2_data, radiation_data, humidity_data, temperature_data, 
-                          pressure_data, pgradiation_data, pm1_data, pm25_data, pm10_data],
+    all_data = pd.concat([co2_data,
+#                           radiation_data,
+                          humidity_data,
+                          temperature_data,
+                          pressure_data,
+                          pgradiation_data,
+                          pm1_data,
+                          pm25_data,
+                          pm10_data],
                          axis=1)
 
     all_data['unix_time'] = all_data['unix_time'].astype('int')
-    
+
 #     return all_data.dropna(axis=0, how='any')
     return all_data
 
@@ -115,3 +122,4 @@ def get_ws_data_by_time(start_time, end_time):
         current_time = current_time + timedelta(days=1)
 
     return data_df
+

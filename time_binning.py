@@ -89,15 +89,18 @@ def store_in_bins(data: np.array):
 
     # bugfix: without the following block, start times later than
     #         the earliest time would result in all NaNs, because
-    #         `last_idx` would never get moved, and no bin would 
+    #         `last_idx` would never get moved, and no bin would
     #         find its matching time, simply because we never looked
     while data[last_idx, 0] < START_TIME:
         last_idx -= 1
+        if last_idx < 0:
+            raise RuntimeError(f'''There is no data after START_TIME
+{datetime.fromtimestamp(START_TIME).strftime("%Y-%m-%d %H:%M:%S")}''')
 
     for i in range(n_bins):  # loops M times
         bins[i] = Bin(start_time=START_TIME + i * TIME_INTERVAL,
                       end_time=START_TIME + (i + 1) * TIME_INTERVAL)
-        
+
         while bins[i].has_time(data[last_idx, 0]):
             bins[i].store(data[last_idx, 1])
             last_idx -= 1
@@ -151,7 +154,7 @@ def main():
         START_TIME = int(datetime.strptime(args.start_time, '%Y-%m-%d--%H:%M:%S').timestamp())
 
     df_to_save = run_binner(args.source, args.col_name)
-    filename = f'ws_data_{args.col_name}_{TIME_INTERVAL}.csv'
+    filename = f'mira_data_{args.col_name}_{TIME_INTERVAL}.csv'
     print(f'Binned data will be saved to {os.path.join(args.save_dir, filename)}', end='')
     if args.start_time:
         print(f' starting from time {datetime.fromtimestamp(START_TIME).strftime("%Y-%m-%d %H:%M:%S")}')
@@ -163,3 +166,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
