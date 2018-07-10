@@ -17,4 +17,3 @@ if __name__ == '__main__':
     df = make_test_data()
 
     dg = run_binner(df, 'vals')
-

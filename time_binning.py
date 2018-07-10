@@ -1,5 +1,5 @@
-"""This file takes a URL as a command line argument and saves the data
-from the URL, then it bins the data by time and produces consistent
+"""This file takes a source as a command line argument and saves the data
+from the source, then it bins the data by time and produces consistent
 timestamps for the data points.
 """
 __author__ = 'Sagnik Bhattacharya (github.com/sagnibak)'
@@ -86,10 +86,18 @@ def store_in_bins(data: np.array):
 
     # make bins and store the values in the right bins
     last_idx = data.shape[0] - 1  # this makes the algorithm run in O(n) time instead of O(n^2)
+
+    # bugfix: without the following block, start times later than
+    #         the earliest time would result in all NaNs, because
+    #         `last_idx` would never get moved, and no bin would 
+    #         find its matching time, simply because we never looked
+    while data[last_idx, 0] < START_TIME:
+        last_idx -= 1
+
     for i in range(n_bins):  # loops M times
         bins[i] = Bin(start_time=START_TIME + i * TIME_INTERVAL,
                       end_time=START_TIME + (i + 1) * TIME_INTERVAL)
-
+        
         while bins[i].has_time(data[last_idx, 0]):
             bins[i].store(data[last_idx, 1])
             last_idx -= 1
@@ -102,12 +110,12 @@ def store_in_bins(data: np.array):
     return df
 
 
-def run_binner(url: str, col_name: str):
+def run_binner(source: str, col_name: str):
     try:
-        df = pd.read_csv(url, sep=',')
+        df = pd.read_csv(source, sep=',')
     except ValueError as ve:
-        if isinstance(url, pd.DataFrame):
-            df = url
+        if isinstance(source, pd.DataFrame):
+            df = source
         else:
             raise ValueError('Cannot handle this data!')
 
@@ -126,25 +134,30 @@ def main():
 
     # command line arguments
     parser = argparse.ArgumentParser(description='Download data and bin it by time.')
-    parser.add_argument('url', help='URL where you want to get data from')
+    parser.add_argument('source', help='source where you want to get data from')
     parser.add_argument('-c', '--col_name', help='name of the column from where data needs to be binned')
     parser.add_argument('-s', '--save_dir', help='directory where binned data should be saved')
     parser.add_argument('-i', '--time_interval', help='time interval to average data over', type=int)
-    parser.add_argument('-t', '--start_time', help='date and to begin collecting data from (24-hour time format)',
-                        metavar='YYYY-MM-DD HH:mm:ss', type=str)
+    parser.add_argument('-t', '--start_time', help='date and time to begin collecting data from (24-hour time format)',
+                        metavar='YYYY-MM-DD--HH:mm:ss', type=str)
     args = parser.parse_args()
 
-    print(f'Getting data from {args.url}')
+    print(f'Getting data from {args.source}')
     if not args.save_dir:
         args.save_dir = 'binned_data'
-    print(f'Binned data will be saved in the directory {args.save_dir}')
     if args.time_interval:
         TIME_INTERVAL = args.time_interval
     if args.start_time:
-        START_TIME = int(datetime.strptime(args.start_time, '%Y-%m-%d %H:%M:%S').timestamp())
+        START_TIME = int(datetime.strptime(args.start_time, '%Y-%m-%d--%H:%M:%S').timestamp())
 
-    df_to_save = run_binner(args.url, args.col_name)
-    df_to_save.to_csv(os.path.join(args.save_dir, f'ws_data_{args.col_name}_{TIME_INTERVAL}.csv'),
+    df_to_save = run_binner(args.source, args.col_name)
+    filename = f'ws_data_{args.col_name}_{TIME_INTERVAL}.csv'
+    print(f'Binned data will be saved to {os.path.join(args.save_dir, filename)}', end='')
+    if args.start_time:
+        print(f' starting from time {datetime.fromtimestamp(START_TIME).strftime("%Y-%m-%d %H:%M:%S")}')
+    else:
+        print('')
+    df_to_save.to_csv(os.path.join(args.save_dir, filename),
                       index=False, na_rep='nan')
 
 

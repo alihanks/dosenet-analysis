@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "/home/sagnick/.conda/envs/jetcar/bin/python",
+    "python.linting.pylintEnabled": false
+}
