@@ -64,7 +64,7 @@ def get_all_binned(interval, data_dir):
     :return:          pandas.DataFrame with all the data
     """
     co2_data = pd.read_csv(os.path.join(data_dir, f'data_co2_ppm_{interval}.csv'),
-                           header=0, names=['unix_time', 'co2'])
+                           header=0, names=['unix_time', 'co2'], usecols=[1])
 
     radiation_data = pd.read_csv(os.path.join(data_dir, f'data_cpm_{interval}.csv'),
                                  header=0, names=['unix_time', 'radiation'], usecols=[1])
@@ -86,11 +86,15 @@ def get_all_binned(interval, data_dir):
 
     pm25_data = pd.read_csv(os.path.join(data_dir, f'data_PM25_{interval}.csv'),
                             header=0, names=['unix_time', 'pm25'], usecols=[1])
+    
+    pm10_data = pd.read_csv(os.path.join(data_dir, f'data_PM10_{interval}.csv'),
+                            header=0, names=['unix_time', 'pm10'])
 
     # make one awesome DataFrame object containing all the data
     all_data = pd.concat([co2_data, radiation_data, humidity_data, temperature_data, 
-                          pressure_data, pgradiation_data, pm1_data, pm25_data],
+                          pressure_data, pgradiation_data, pm1_data, pm25_data, pm10_data],
                          axis=1)
+
     all_data['unix_time'] = all_data['unix_time'].astype('int')
     
 #     return all_data.dropna(axis=0, how='any')

@@ -6,14 +6,15 @@ import os
 
 SECONDS_IN_A_DAY = 60 * 60 * 24
 SECONDS_IN_A_QUARTER_DAY = 60 * 60 * 6
+SECONDS_IN_ONE_HOUR = 60 * 60
 
 
 def run_all_binnings(time_interval):
     """Runs `time_binning.py` for all the five
     data types, passing in the argument `time_interval`.
     """
-    args = f'-t 2018-06-24--00:00:01 -s binned_data_15_days/ -i {time_interval}'  # common arguments for all the commands
-    ws_args = f'-t 2018-06-24--00:00:01 -s binned_data_15_days/ -i {time_interval}'
+    args = f'-t 2018-06-29--00:00:01 -s binned_data_10_days/ -i {time_interval}'  # common arguments for all the commands
+    ws_args = f'-t 2018-06-29--00:00:01 -s binned_data_10_days/ -i {time_interval}'
 
     # these commands will be run as if they are being run from terminal
     # these should also work on the Windows command prompt
@@ -35,20 +36,20 @@ def run_all_binnings(time_interval):
     #     f'python time_binning.py ~/Downloads/etch_roof_aq.csv -c PM25 {args}')
 
     os.system(
-        f'python time_binning.py wunderground_data/data_fire.csv -c Temperature {ws_args}')
+        f'python time_binning.py wunderground_data/data_fire_1.csv -c Temperature {ws_args}')
     os.system(
-        f'python time_binning.py wunderground_data/data_fire.csv -c Pressure {ws_args}')
+        f'python time_binning.py wunderground_data/data_fire_1.csv -c Pressure {ws_args}')
     os.system(
-        f'python time_binning.py wunderground_data/data_fire.csv -c Humidity {ws_args}')
+        f'python time_binning.py wunderground_data/data_fire_1.csv -c Humidity {ws_args}')
     os.system(
-        f'python time_binning.py wunderground_data/data_fire.csv -c WindDirectionDegrees {ws_args}')
+        f'python time_binning.py wunderground_data/data_fire_1.csv -c WindDirectionDegrees {ws_args}')
     os.system(
-        f'python time_binning.py wunderground_data/data_fire.csv -c WindSpeedMPH {ws_args}')
+        f'python time_binning.py wunderground_data/data_fire_1.csv -c WindSpeedMPH {ws_args}')
 
 
 def main():
-    for i in range(1, 21):
-        run_all_binnings(i * SECONDS_IN_A_QUARTER_DAY)
+    for i in range(1, 5):
+        run_all_binnings(i * SECONDS_IN_ONE_HOUR)
 
 
 if __name__ == '__main__':
