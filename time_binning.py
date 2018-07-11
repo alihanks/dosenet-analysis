@@ -154,7 +154,7 @@ def main():
         START_TIME = int(datetime.strptime(args.start_time, '%Y-%m-%d--%H:%M:%S').timestamp())
 
     df_to_save = run_binner(args.source, args.col_name)
-    filename = f'mira_data_{args.col_name}_{TIME_INTERVAL}.csv'
+    filename = f'pine_data_{args.col_name}_{TIME_INTERVAL}.csv'
     print(f'Binned data will be saved to {os.path.join(args.save_dir, filename)}', end='')
     if args.start_time:
         print(f' starting from time {datetime.fromtimestamp(START_TIME).strftime("%Y-%m-%d %H:%M:%S")}')
