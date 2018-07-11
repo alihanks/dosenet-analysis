@@ -143,6 +143,8 @@ def main():
     parser.add_argument('-i', '--time_interval', help='time interval to average data over', type=int)
     parser.add_argument('-t', '--start_time', help='date and time to begin collecting data from (24-hour time format)',
                         metavar='YYYY-MM-DD--HH:mm:ss', type=str)
+    parser.add_argument('-l', '--location', help='prefix for the location (will be reflected in generated file names)',
+                        type=str)
     args = parser.parse_args()
 
     print(f'Getting data from {args.source}')
@@ -152,9 +154,11 @@ def main():
         TIME_INTERVAL = args.time_interval
     if args.start_time:
         START_TIME = int(datetime.strptime(args.start_time, '%Y-%m-%d--%H:%M:%S').timestamp())
+    if not args.location:
+        raise ValueError('Location name/prefix not provided!')
 
     df_to_save = run_binner(args.source, args.col_name)
-    filename = f'pine_data_{args.col_name}_{TIME_INTERVAL}.csv'
+    filename = f'{args.location}_data_{args.col_name}_{TIME_INTERVAL}.csv'
     print(f'Binned data will be saved to {os.path.join(args.save_dir, filename)}', end='')
     if args.start_time:
         print(f' starting from time {datetime.fromtimestamp(START_TIME).strftime("%Y-%m-%d %H:%M:%S")}')

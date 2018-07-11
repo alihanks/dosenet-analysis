@@ -65,44 +65,73 @@ def get_all_binned(interval: int, data_dir: str, location: str):
                       loaded
     :return:          pandas.DataFrame with all the data
     """
-    co2_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_co2_ppm_{interval}.csv'),
-                           header=0, names=['unix_time', 'co2'], usecols=[1])
+    concat_list = []  # list of dataframes to be concatenated
 
-    radiation_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_cpm_{interval}.csv'),
-                                 header=0, names=['unix_time', 'radiation'], usecols=[1])
+    try:
+        co2_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_co2_ppm_{interval}.csv'),
+                               header=0, names=['unix_time', 'co2'])
+        concat_list.append(co2_data)
+    except:
+        pass                               
 
-    pgradiation_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_cpmpg_{interval}.csv'),
-                                   header=0, names=['unix_time', 'pgradiation'], usecols=[1])
+    try:
+        radiation_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_cpm_{interval}.csv'),
+                                     header=0, names=['unix_time', 'radiation'], usecols=[1])
+        concat_list.append(radiation_data)
+    except:
+        pass                                     
 
-    humidity_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_humidity_{interval}.csv'),
-                                header=0, names=['unix_time', 'humidity'], usecols=[1])
+    try:
+        pgradiation_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_cpmpg_{interval}.csv'),
+                                       header=0, names=['unix_time', 'pgradiation'], usecols=[1])
+        concat_list.append(pgradiation_data)
+    except:
+        pass                                       
 
-    temperature_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_temperature_{interval}.csv'),
-                                   header=0, names=['unix_time', 'temperature'], usecols=[1])
+    try:
+        humidity_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_humidity_{interval}.csv'),
+                                    header=0, names=['unix_time', 'humidity'], usecols=[1])
+        concat_list.append(humidity_data)
+    except:
+        pass                                    
 
-    pressure_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_pressure_{interval}.csv'),
-                                header=0, names=['unix_time', 'pressure'], usecols=[1])
+    try:
+        temperature_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_temperature_{interval}.csv'),
+                                       header=0, names=['unix_time', 'temperature'], usecols=[1])
+        concat_list.append(temperature_data)
+    except:
+        pass                                       
 
-    pm1_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_PM1_{interval}.csv'),
-                           header=0, names=['unix_time', 'pm1'], usecols=[1])
+    try:
+        pressure_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_pressure_{interval}.csv'),
+                                    header=0, names=['unix_time', 'pressure'], usecols=[1])
+        concat_list.append(pressure_data)
+    except:
+        pass                                    
 
-    pm25_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_PM25_{interval}.csv'),
-                            header=0, names=['unix_time', 'pm25'], usecols=[1])
+    try:
+        pm1_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_PM1_{interval}.csv'),
+                               header=0, names=['unix_time', 'pm1'], usecols=[1])
+        concat_list.append(pm1_data)
+    except:
+        pass                               
 
-    pm10_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_PM10_{interval}.csv'),
-                            header=0, names=['unix_time', 'pm10'])
+    try:
+        pm25_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_PM25_{interval}.csv'),
+                                header=0, names=['unix_time', 'pm25'], usecols=[1])
+        concat_list.append(pm25_data)
+    except:
+        pass                                
+
+    try:
+        pm10_data = pd.read_csv(os.path.join(data_dir, f'{location}_data_PM10_{interval}.csv'),
+                                header=0, names=['unix_time', 'pm10'])
+        concat_list.append(pm10_data)
+    except:
+        pass                                
 
     # make one awesome DataFrame object containing all the data
-    all_data = pd.concat([co2_data,
-                          radiation_data,
-                          humidity_data,
-                          temperature_data,
-                          pressure_data,
-                          pgradiation_data,
-                          pm1_data,
-                          pm25_data,
-                          pm10_data],
-                         axis=1)
+    all_data = pd.concat(concat_list, axis=1)
 
     all_data['unix_time'] = all_data['unix_time'].astype('int')
 
