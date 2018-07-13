@@ -134,19 +134,20 @@ def get_all_binned(interval: int, data_dir: str, location: str):
     all_data = pd.concat(concat_list, axis=1)
 
     all_data['unix_time'] = all_data['unix_time'].astype('int')
+    all_data = all_data.loc[:, ~all_data.columns.duplicated()]
 
 #     return all_data.dropna(axis=0, how='any')
     return all_data
 
 
-def get_ws_data_by_time(start_time, end_time):
+def get_ws_data_by_time(start_time, end_time, location_id):
     current_time = start_time
     data_df = pd.DataFrame([])
     while current_time < end_time:
         # store the result of the query in dataframe `data_df`
-        temporary = process_data(get_clean_df('KCABERKE105', [str(current_time.month),
-                                                              str(current_time.day),
-                                                              str(current_time.year)]))
+        temporary = process_data(get_clean_df(location_id, [str(current_time.month),
+                                                            str(current_time.day),
+                                                            str(current_time.year)]))
         temp_cols = list(temporary.columns.values)
         temporary = temporary[[temp_cols[6]] + temp_cols[:6] + temp_cols[7:]]
         data_df = pd.concat([data_df, temporary], ignore_index=True, sort=True)
